@@ -1,5 +1,6 @@
 import socket
 import threading
+import os
 global condicion
 # Función que maneja la conexión para un cliente
 def handle_client(client_socket):
@@ -18,6 +19,11 @@ def handle_client(client_socket):
                 break
             command_parts = data.decode().strip().split(maxsplit=1)
             comando = command_parts[0]
+            if "ls" in comando:
+                lista=os.listdir()
+                listaConvertida='\n'.join(lista)
+                response_message=bytes(listaConvertida,'utf-8')
+                client_socket.send(response_message)
             if "echo" in comando:
                 if len(command_parts) > 1:
                     response_message = bytes(command_parts[1], 'utf-8') 
