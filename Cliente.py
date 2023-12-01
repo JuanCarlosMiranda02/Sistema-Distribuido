@@ -22,12 +22,13 @@ try:
             break
         if("mv" in MCliente):# Guardar el archivo en el cliente
             rutaActual=os.getcwd()
-            print(rutaActual)
+            #print(rutaActual)
             rutaBytes = bytes(rutaActual, 'utf-8')
-            print(rutaBytes)
+            #print(rutaBytes)
             mi_socket.send(rutaBytes)
         respuesta = mi_socket.recv(1024)
         print(respuesta.decode())
+        
         if not respuesta:
             break
 finally:
