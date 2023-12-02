@@ -18,25 +18,17 @@ def handle_client(client_socket):
             command_parts = data.decode().strip().split(maxsplit=1)
             comando = command_parts[0]
             if "mv" in comando:
-                rutaNueva=client_socket.recv(1024).decode('utf-8')
-                print(rutaNueva)
                 if len(command_parts) > 1:
                     archivo=command_parts[1]
-                    rutaArchivoActual=os.getcwd()+'/' + archivo
-                    if os.path.isfile(rutaArchivoActual):
-                        try:
-                            # Mover el archivo
-                            shutil.move(rutaArchivoActual, rutaNueva)
-                            response_message=(b"Se ha movido el archivo con exito")
-                            client_socket.send(response_message)
-                        except:
-                            response_message=(b"Error al mover el archivo")
-                            client_socket.send(response_message)
-
+                    rutaActual = os.getcwd() + '/' + archivo
+                    rutaNueva = client_socket.recv(1024).decode()
+                    if os.path.isfile(rutaActual):
+                        client_socket.sendall(b"ready")
+                        # Mover el archivo
+                        shutil.move(rutaActual, os.path.join(rutaNueva, archivo))
+                        print(f'El archivo ha sido movido con éxito.')
                     else:
-                        response_message=(b'El archivo no existe en la ruta especificada.')
-                        client_socket.send(response_message)
-
+                        print(f'El archivo no existe en la ruta especificada.')
             if "ls" in comando:
                 lista=os.listdir()
                 listaConvertida='\n'.join(lista)
