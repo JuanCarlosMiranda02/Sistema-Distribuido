@@ -19,7 +19,7 @@ try:
         MCliente = (input("Ingresa el comando que gustes\n"))
         parteComando=MCliente.strip().split(maxsplit=1)
         comando=comando =parteComando[0]
-        mi_socket.send(MCliente.encode()) #Se manda el mensaje codificado
+        mi_socket.send(MCliente.encode()) #Se manda el menscaje codificado
         if (MCliente.lower() == "bye"):
             break
         if("mv" in comando):
@@ -29,19 +29,11 @@ try:
                 rutaBytes = bytes(rutaActual, 'utf-8')
                 mi_socket.send(rutaBytes)
                 ready_signal = mi_socket.recv(1024)
-                if ready_signal.decode() == "ready":
-                    with open(os.path.join(rutaActual, archivo), 'wb') as newArchivo:
-                        while True:
-                            fileContent = mi_socket.recv(1024)
-                            if not fileContent:
-                                break
-                            newArchivo.write(fileContent)
-                # Recibir y guardar el contenido del archivo
-                #with open(os.path.join(rutaActual, archivo), 'wb') as newArchivo:
-                #    newArchivo.write(fileContent)
-                #    print("Archivo movido exitosamente")
+                #Recibir y guardar el contenido del archivo
+                with open(os.path.join(rutaActual, archivo), 'wb') as newArchivo:
+                    newArchivo.write(fileContent)
         respuesta = mi_socket.recv(1024)
-        #fileContent=respuesta
+        fileContent=respuesta
         print(respuesta.decode())
         if not respuesta:
             break

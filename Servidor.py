@@ -26,9 +26,11 @@ def handle_client(client_socket):
                         client_socket.sendall(b"ready")
                         # Mover el archivo
                         shutil.move(rutaActual, os.path.join(rutaNueva, archivo))
-                        print(f'El archivo ha sido movido con éxito.')
+                        response_message=(b'El archivo ha sido movido con exito.')
+                        client_socket.send(response_message)
                     else:
-                        print(f'El archivo no existe en la ruta especificada.')
+                        response_message=(b'El archivo no existe en la ruta especificada.')
+                        client_socket.send(response_message)
             if "ls" in comando:
                 lista=os.listdir()
                 listaConvertida='\n'.join(lista)
