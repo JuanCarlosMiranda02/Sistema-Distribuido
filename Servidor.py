@@ -17,13 +17,35 @@ def handle_client(client_socket):
                 break
             command_parts = data.decode().strip().split(maxsplit=1)
             comando = command_parts[0]
+            if "cat" in comando:
+                if len(command_parts)> 1:
+                    archivo=command_parts[1]
+                    with open(archivo,'r') as documento:
+                        contenido = bytes(documento.read(), 'utf-8')
+                        client_socket.send(contenido)
+            if "up" in comando:
+                bandera= True
+                if len(command_parts)> 1:
+                    archivo=command_parts[1]
+                    try:
+                        with open(archivo, 'wb') as documento:
+                            while bandera:
+                                datos = client_socket.recv(1024)
+                                if not datos:
+                                    break
+                                documento.write(datos)
+                                bandera=False
+                    except:
+                        response_message=(b'Ocurrio un error al guardar el archivo')
+                        client_socket.send(response_message)
+                    response_message=(b'Archivo guardado')
+                    client_socket.send(response_message)  
             if "mv" in comando:
                 if len(command_parts) > 1:
                     archivo=command_parts[1]
                     rutaActual = os.getcwd() + '/' + archivo
                     rutaNueva = client_socket.recv(1024).decode()
                     if os.path.isfile(rutaActual):
-                        client_socket.sendall(b"ready")
                         # Mover el archivo
                         shutil.move(rutaActual, os.path.join(rutaNueva, archivo))
                         response_message=(b'El archivo ha sido movido con exito.')

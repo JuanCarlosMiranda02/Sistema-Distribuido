@@ -32,6 +32,12 @@ try:
                 #Recibir y guardar el contenido del archivo
                 with open(os.path.join(rutaActual, archivo), 'wb') as newArchivo:
                     newArchivo.write(fileContent)
+        if "up" in comando:
+            if len(parteComando) > 1:
+                archivo=parteComando[1]
+                with open(archivo, 'rb') as documento:
+                    for datos in documento:
+                        mi_socket.sendall(datos)
         respuesta = mi_socket.recv(1024)
         fileContent=respuesta
         print(respuesta.decode())
