@@ -1,8 +1,7 @@
-import socket
-
+import socket, os
 puerto=3490
 #Entrada de datos
-#DireccionIP = (input("ingresa la direccion a la que te quieras conectar\n")) # Se ingresa la direccion a la cual desea conectarse - 127.0.1.1
+#DireccionIP = (input("ingresa la direccion a la que te quieras conSctar\n")) # Se ingresa la direccion a la cual desea conectarse - 127.0.1.1
 DireccionIP=input("Ingresa una dirección para conectar: ")
 #Intermedio de la operacion
 mi_socket = socket.socket() #creacion de socket
@@ -18,10 +17,29 @@ try:
     print('Se recibio un mensaje de el servidor: {!r}'.format(respuesta.decode()))
     while True:
         MCliente = (input("Ingresa el comando que gustes\n"))
-        mi_socket.send(MCliente.encode()) #Se manda el mensaje codificado
+        parteComando=MCliente.strip().split(maxsplit=1)
+        comando=comando =parteComando[0]
+        mi_socket.send(MCliente.encode()) #Se manda el menscaje codificado
         if (MCliente.lower() == "bye"):
             break
+        if("mv" in comando):
+            if len(parteComando) > 1:
+                archivo=parteComando[1]
+                rutaActual=os.getcwd()
+                rutaBytes = bytes(rutaActual, 'utf-8')
+                mi_socket.send(rutaBytes)
+                ready_signal = mi_socket.recv(1024)
+                #Recibir y guardar el contenido del archivo
+                with open(os.path.join(rutaActual, archivo), 'wb') as newArchivo:
+                    newArchivo.write(fileContent)
+        if "up" in comando:
+            if len(parteComando) > 1:
+                archivo=parteComando[1]
+                with open(archivo, 'rb') as documento:
+                    for datos in documento:
+                        mi_socket.sendall(datos)
         respuesta = mi_socket.recv(1024)
+        fileContent=respuesta
         print(respuesta.decode())
         if not respuesta:
             break
