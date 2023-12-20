@@ -7,7 +7,7 @@ def handle_client(client_socket):
         data = client_socket.recv(1024)
         print('Conexión de: ', client_address)
         print('Se recibieron datos de {}: {}'.format(client_address, data.decode()))
-        message = b'Usted se ha conectado exitosamente al servidor'
+        message = b'Usted se ha conectado exitosamente al servidor central'
         client_socket.send(message)
         condicion=True
         while condicion:
@@ -67,12 +67,13 @@ def handle_client(client_socket):
                     break
     finally:
         # Clean up the connection
+        print('Cerrando conexion con servidor central')
         client_socket.close()
         print('Conexión cerrada con: ', client_address)
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Bind the socket to the port
-server_address = ('0.0.0.0', 3490)
+server_address = ('192.168.1.11', 3490)
 sock.bind(server_address)
 # Listen for incoming connections
 sock.listen(4)
